@@ -1,0 +1,16 @@
+import Redis from "ioredis";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+
+export const redis = new Redis(process.env.UPSTASH_REDIS_URL, {
+	tls: {},
+	retryStrategy: (times) => {
+		const delay = Math.min(times * 50, 2000);
+		return delay;
+	},
+});
